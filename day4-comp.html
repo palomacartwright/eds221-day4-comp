@@ -179,13 +179,116 @@ pre code {
 total_time_vec &lt;- vector(mode = &quot;numeric&quot;, 
                          length = (length(quarter_splits) -1))
 
-for(i in seq_along(quarter_splits) - 1) {
+for(i in 1:(length(quarter_splits) - 1)) {
+  
   total_time &lt;- quarter_splits[i] + quarter_splits[i + 1]
   total_time_vec[i] &lt;- total_time
 }
 
 total_time_vec</code></pre>
 <pre><code>## [1] 2.1 2.3 2.3 2.5 2.9 3.1 3.0</code></pre>
+</div>
+<div id="functions-practice" class="section level2">
+<h2>Functions Practice</h2>
+<p>Introduction to writing functions in R</p>
+<div id="basic-function-structure-practice" class="section level3">
+<h3>Basic Function Structure Practice</h3>
+<pre class="r"><code># Using the bird, dog example from lecture 
+
+birddog_sum &lt;- function(bird, dog){
+  
+  
+  if(dog &gt; 50){
+    stop(&quot;Birds can&#39;t be greater than 50&quot;)
+  }
+  if(bird &lt; 10){
+    message(&quot;cool little bird&quot;)
+  }
+  if(dog &lt; 0 ){
+    warning(&quot;Can a dog be less than 0 pounds?&quot;)
+  }
+  add_birddog &lt;- bird + dog 
+  return(add_birddog)
+}
+bird100_dog5 &lt;- birddog_sum(bird = 9, dog = 5)</code></pre>
+<pre><code>## cool little bird</code></pre>
+<pre class="r"><code>bird100_dog5</code></pre>
+<pre><code>## [1] 14</code></pre>
+<pre class="r"><code>birddog_sum(bird = 25, dog = 10)</code></pre>
+<pre><code>## [1] 35</code></pre>
+<pre class="r"><code># Function using strings 
+
+say_hello &lt;- function(friend, weekday){
+  print(paste0(&quot;Hello &quot;, friend, &quot;. Have a great &quot;, weekday))
+}
+
+say_hello(friend = &quot;Daisy&quot;, weekday = &quot;Thursday&quot;)</code></pre>
+<pre><code>## [1] &quot;Hello Daisy. Have a great Thursday&quot;</code></pre>
+</div>
+<div id="print-vs-return" class="section level3">
+<h3>Print vs Return</h3>
+<pre class="r"><code>find_multiple &lt;- function(a, b){
+  my_multiplication &lt;- a * b 
+  print(my_multiplication)
+  
+}
+find_multiple(a = 10, b = 6)</code></pre>
+<pre><code>## [1] 60</code></pre>
+<pre class="r"><code>find_multiple(a = 10 , b = 6) + 12 ## This will break in python because you need to return the my_multiplication value instead of print.</code></pre>
+<pre><code>## [1] 60</code></pre>
+<pre><code>## [1] 72</code></pre>
+</div>
+<div id="function-with-conditions" class="section level3">
+<h3>Function with Conditions</h3>
+<pre class="r"><code>animal_age &lt;- function(animal, age){
+  if(!(animal %in% c(&quot;dog&quot;, &quot;goat&quot;))){
+    stop(&quot;We don&#39;t know the age conversion of this animal to human years. 
+            This function only allows dogs and goats.&quot;)
+  }
+  if(animal == &quot;dog&quot;){
+    creature_age &lt;- age * 7 
+    return(creature_age)
+  } else if(animal == &quot;goat&quot;){
+    creature_age &lt;- age * 4.7 
+    return(creature_age)
+  }
+}
+
+animal_age(animal = &quot;dog&quot;, age = 12)</code></pre>
+<pre><code>## [1] 84</code></pre>
+<pre class="r"><code>adelie_gentoo &lt;- penguins %&gt;% 
+  filter(species %in% c(&quot;Adelie&quot;, &quot;Gentoo&quot;))
+# the in operator here basically condenses a bunch of or statements into something more manageable. </code></pre>
+<pre class="r"><code># This code is not really wrong, it is doing what you asked it to do. but we also know that this is bad and we should use the %in% instead of the ==. This only has 100+ entries instead of 200+ 
+adelie_gentoo_wrong &lt;- penguins %&gt;% 
+  filter(species == c(&quot;Adelie&quot;, &quot;Gentoo&quot;))
+
+  # filter(species == &quot;Adelie&quot; | species == &quot;Gentoo) does the same thing as the in function above</code></pre>
+</div>
+</div>
+<div id="functions-with-for-loops" class="section level2">
+<h2>Functions with for loops</h2>
+<p>Practicing implamenting functions with for loops</p>
+<pre class="r"><code>df_means &lt;- function(df){
+  for(i in 1:ncol(df)){
+    col_mean &lt;- mean(df[[i]]) ## You need double brackets for data frames to  
+                              ## access the vector of values 
+    column_name &lt;- colnames(df[i])
+    print(paste(&quot;The mean value of&quot;, column_name, &quot;is&quot;, col_mean))
+  }
+}
+df_means(mtcars) </code></pre>
+<pre><code>## [1] &quot;The mean value of mpg is 20.090625&quot;
+## [1] &quot;The mean value of cyl is 6.1875&quot;
+## [1] &quot;The mean value of disp is 230.721875&quot;
+## [1] &quot;The mean value of hp is 146.6875&quot;
+## [1] &quot;The mean value of drat is 3.5965625&quot;
+## [1] &quot;The mean value of wt is 3.21725&quot;
+## [1] &quot;The mean value of qsec is 17.84875&quot;
+## [1] &quot;The mean value of vs is 0.4375&quot;
+## [1] &quot;The mean value of am is 0.40625&quot;
+## [1] &quot;The mean value of gear is 3.6875&quot;
+## [1] &quot;The mean value of carb is 2.8125&quot;</code></pre>
 </div>
 
 

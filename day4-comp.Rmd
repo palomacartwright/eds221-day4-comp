@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(palmerpenguins)
+library(dplyr)
 ```
 
 ## Code Warmup 
@@ -19,11 +21,124 @@ total_time_vec <- vector(mode = "numeric",
                          length = (length(quarter_splits) -1))
 
 for(i in 1:(length(quarter_splits) - 1)) {
+  
   total_time <- quarter_splits[i] + quarter_splits[i + 1]
   total_time_vec[i] <- total_time
 }
 
 total_time_vec
+
+```
+
+## Functions Practice 
+
+Introduction to writing functions in R 
+
+### Basic Function Structure Practice 
+
+```{r}
+
+# Using the bird, dog example from lecture 
+
+birddog_sum <- function(bird, dog){
+  
+  
+  if(dog > 50){
+    stop("Birds can't be greater than 50")
+  }
+  if(bird < 10){
+    message("cool little bird")
+  }
+  if(dog < 0 ){
+    warning("Can a dog be less than 0 pounds?")
+  }
+  add_birddog <- bird + dog 
+  return(add_birddog)
+}
+bird100_dog5 <- birddog_sum(bird = 9, dog = 5)
+bird100_dog5
+
+birddog_sum(bird = 25, dog = 10)
+
+
+```
+
+```{r}
+# Function using strings 
+
+say_hello <- function(friend, weekday){
+  print(paste0("Hello ", friend, ". Have a great ", weekday))
+}
+
+say_hello(friend = "Daisy", weekday = "Thursday")
+```
+
+### Print vs Return 
+
+```{r}
+
+find_multiple <- function(a, b){
+  my_multiplication <- a * b 
+  print(my_multiplication)
+  
+}
+find_multiple(a = 10, b = 6)
+
+find_multiple(a = 10 , b = 6) + 12 ## This will break in python because you need to return the my_multiplication value instead of print.
+```
+
+### Function with Conditions 
+
+```{r}
+
+animal_age <- function(animal, age){
+  if(!(animal %in% c("dog", "goat"))){
+    stop("We don't know the age conversion of this animal to human years. 
+            This function only allows dogs and goats.")
+  }
+  if(animal == "dog"){
+    creature_age <- age * 7 
+    return(creature_age)
+  } else if(animal == "goat"){
+    creature_age <- age * 4.7 
+    return(creature_age)
+  }
+}
+
+animal_age(animal = "dog", age = 12)
+
+```
+
+```{r}
+adelie_gentoo <- penguins %>% 
+  filter(species %in% c("Adelie", "Gentoo"))
+# the in operator here basically condenses a bunch of or statements into something more manageable. 
+```
+
+```{r}
+
+# This code is not really wrong, it is doing what you asked it to do. but we also know that this is bad and we should use the %in% instead of the ==. This only has 100+ entries instead of 200+ 
+adelie_gentoo_wrong <- penguins %>% 
+  filter(species == c("Adelie", "Gentoo"))
+
+  # filter(species == "Adelie" | species == "Gentoo) does the same thing as the in function above
+```
+
+## Functions with for loops 
+
+Practicing implamenting functions with for loops 
+
+```{r}
+
+df_means <- function(df){
+  for(i in 1:ncol(df)){
+    col_mean <- mean(df[[i]]) ## You need double brackets for data frames to  
+                              ## access the vector of values 
+    column_name <- colnames(df[i])
+    print(paste("The mean value of", column_name, "is", col_mean))
+  }
+}
+df_means(mtcars) 
 
 ```
 
