@@ -1,0 +1,105 @@
+---
+title: "Day 4 Afternoon Comp Session"
+author: "Paloma Cartwright"
+date: "12/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+## Functions in R 
+
+#### Example: use values from a data frame to calculate something based on user input. 
+
+```{r}
+# Calculate the groundwater transport rate 
+
+gw_rate <- function(site){
+  
+  gw_slope_depth <- data.frame(sitename = c("mountain", "prairie", 
+                                            "desert", "beach"), 
+                               depth = c(32, 41, 63, 2), 
+                               slope = c(11.2, 0.4, 0.8, 2.6))
+  
+  site_select <- dplyr::filter(gw_slope_depth, sitename == site)
+  transport_rate <- 1.4 * site_select$slope + 3.6 * site_select$depth
+  return(transport_rate)
+}
+
+gw_rate(site = "prairie")
+```
+ 
+#### Now using switch()
+
+
+```{r}
+
+gw_rate_switch <- function(site){
+  
+  gw_slope_depth <- switch(site, 
+                           "mountain" = c(32, 11.2), 
+                           "prairie" = c(41, 0.4), 
+                           "desert" = c(63, 0.8), 
+                           "beach" = c(2, 2.6))
+  
+  transport_rate <- 1.4 * gw_slope_depth[2] + 3.6 * gw_slope_depth[1]
+  return(transport_rate)
+  
+}
+
+gw_rate_switch("prairie")
+```
+ 
+### Logistic Growth Rate 
+
+```{r}
+logistic_growth <- function(K, N0, r, time) {
+  Nt <- K / (1 + ((K-N0)/N0) * exp(-r * time))
+  return(Nt)
+}
+
+logistic_growth(5000, 200, 0.43, 14)
+
+time_vec <- seq(from = 0, to = 35, by = 0.1)
+bacterial_growth <- logistic_growth(5000, 200, 0.43, time_vec)
+
+b_growth_df <- data.frame(time_vec, bacterial_growth)
+
+ggplot(data = b_growth_df, aes(x = time_vec, y = bacterial_growth)) +
+  geom_line(aes(color = time_vec))
+
+```
+
+##### Logistic Growth with time vector and range of rates
+
+```{r}
+# Implemented using nested for loops. 
+r_seq <- seq(from = 0.2, to = 0.4, by = 0.01)
+time_vec <- seq(from = 0, to = 35, by = 0.1)
+
+out_matrix <- matrix(nrow = length(time_vec), ncol = length(r_seq))
+# NO = 100, K = 6000
+for(i in seq_along(r_seq)){
+  for(j in seq_along(time_vec)){
+    out_matrix[j, i] <- logistic_growth(6000, 100, r_seq[i], time_vec[j])
+  }
+}
+# Wrangling the data so that it can be plotted 
+
+output_df <- data.frame(time = time_vec, out_matrix)
+
+# Update column names 
+
+colnames(output_df) <- c("time", paste0("gr_", r_seq))
+
+# Make a long form (tidy version) of this data 
+out_df_long <- output_df %>% 
+  pivot_longer(-time, names_to = "growth_rate", values_to = "population")
+
+ggplot(out_df_long, aes(x = time, y = population)) +
+  geom_line(aes(color = growth_rate))
+```
+
+
