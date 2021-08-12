@@ -130,15 +130,46 @@ Practicing implamenting functions with for loops
 
 ```{r}
 
-df_means <- function(df){
-  for(i in 1:ncol(df)){
-    col_mean <- mean(df[[i]]) ## You need double brackets for data frames to  
-                              ## access the vector of values 
-    column_name <- colnames(df[i])
-    print(paste("The mean value of", column_name, "is", col_mean))
+df_means <- function(df) {
+  for (i in 1:ncol(df)) {
+  col_mean <-
+    mean(df[[i]], na.rm = TRUE) ## You need double brackets for data frames to access the vector of values
+  column_name <- colnames(df[i])
+  print(paste("The mean value of", column_name, "is", col_mean))
   }
 }
+
 df_means(mtcars) 
 
 ```
+
+
+## Functions using the penguins dataset 
+
+```{r}
+## Create a new data fram that only includes the numeric values of chinstrap penguins 
+
+chinstrap_sizes <- penguins %>% 
+  filter(species == "Chinstrap") %>% 
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+
+df_means(chinstrap_sizes)
+```
+
+## Condition to check the class of an input 
+
+```{r}
+lunchtime <- function(tacos, price_per){
+  
+  if(is.numeric(tacos) & is.numeric(price_per)){
+    meal_price <- tacos * price_per
+    return(meal_price)
+  } else {
+    stop("you must input a number")
+  }
+}
+lunchtime(4, 2.50)
+```
+
+
 

@@ -289,6 +289,12 @@ df_means(mtcars) </code></pre>
 ## [1] &quot;The mean value of am is 0.40625&quot;
 ## [1] &quot;The mean value of gear is 3.6875&quot;
 ## [1] &quot;The mean value of carb is 2.8125&quot;</code></pre>
+<div id="functions-using-the-penguins-dataset" class="section level3">
+<h3>Functions using the penguins dataset</h3>
+<pre class="r"><code>chinstrap_sizes &lt;- penguins %&gt;% 
+  filter(species == &quot;Chinstrap&quot;) %&gt;% 
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)</code></pre>
+</div>
 </div>
 
 
